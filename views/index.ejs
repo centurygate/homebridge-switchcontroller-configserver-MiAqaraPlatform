@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta name="viewport" content="width=device-width" />
+  <link rel="stylesheet" href="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+  <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+  <script src="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script type="text/javascript" src="/js/validateparameter.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+
+      $("form").submit(function(){
+          
+          // if(!isValidIP($("#HOST").val()))
+          // {
+          //   // alert('输入的HOST 非法');
+
+          //   //返回false禁止向服务器发送请求
+          //   $('#popupCloseRight').trigger('create').popup('open');
+          //   return false;
+          // }
+          // if(!isValidPort($("#PORT").val()))
+          // {
+          //   // alert('输入的PORT 非法');
+          //   $('#popupCloseRight').trigger('create').popup('open');
+          //   //返回false禁止向服务器发送请求
+          //   return false;
+          // }
+          // if(!isValidGroup($("#GROUP").val()))
+          // {
+          //   // alert('输入的GROUP 非法');
+          //   $('#popupCloseRight').trigger('create').popup('open');
+          //   //返回false禁止向服务器发送请求
+          //   return false;
+          // }
+          
+      });
+    })
+    </script>
+</head>
+
+<body>
+
+  <div data-role="page">
+    <div data-role="header">
+      <h1>小米网关配置</h1>
+    </div>
+    <div data-role="content">
+      <form method="post" action="/save">
+        <div data-role="fieldcontain">
+          
+                  <label for="gateways">gateways</label>
+              
+                  <textarea name="gateways" id="gateways">
+                    <% for(var i =0; i < configobj['platforms'].length;i++) 
+                        {
+                          if(configobj['platforms'][i].platform == 'MiAqaraPlatform')
+                          {
+                    %>
+                            <%= JSON.stringify(configobj['platforms'][i].gateways).replace(/{/ig,'').replace(/}/ig,'').replace(/"/ig,'')%>
+                    <% 
+                          }
+                        } 
+                    %>
+                  </textarea>
+        </div>
+        <input type="submit" value="提交" >
+      </form>
+    </div>
+    <div data-role="footer">
+        <div align="center"><a href="mailto:centurygate@163.com">centurygate@163.com</a></div>
+      </div>
+  
+
+      <div data-role="popup" id="popupCloseRight" data-overlay-theme="a" class="ui-content" style="max-width:280px">
+              <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+          <p>&nbsp;&nbsp;存在非法参数&nbsp;&nbsp;</p>
+          </div>
+
+</body>
+
+</html>
