@@ -116,7 +116,7 @@
                   <!-- <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='DELSSID("<%= gatewaykey.replace(/"/ig,'') %>")' class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left"> -->
 
                      <!--  <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">Delete page...</a> -->
-                  <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='PREDELSSID("<%= gatewaykey.replace(/"/ig,'') %>")' data-rel="popup"  data-position-to="window" data-transition="pop" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">删除SSID</a></td>
+                  <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='PREDELSSID("<%= gatewaykey.replace(/"/ig,'') %>")' data-rel="popup"  data-position-to="window" data-transition="pop" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">删除</a></td>
                   </tr>
                 <%
                 }
@@ -137,20 +137,20 @@
       <div data-role="popup" id="popupSSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
               <h3 class="ui-title">SSID 和 Password 只能为数字或字符,请重新添加!</h3>
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
+              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
       <div data-role="popup" id="popupSSIDEMPTY" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
               <h3 class="ui-title">要删除的SSID不能为空!</h3>
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
+              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
       <div data-role="popup" id="popupREQERROR" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
               <h3 class="ui-title">向服务器请求失败,请检查网络设置!</h3>
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
+              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
       
@@ -163,7 +163,8 @@
                   <label for="PASSWD" class="ui-hidden-accessible">Password:</label>
                   <input type="text" name="PASSWD" id="PASSWD" value="" placeholder="Password" data-theme="a" autocomplete="off">
                   <!-- <button type="button" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-plus">确定</button> -->
-                  <a href="#"  onclick = "ADDSSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
+                  <a href="#"  onclick = "ADDSSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" data-rel="back">确定</a>
+                  <!-- <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Sign in</button> -->
               </div>
           </form>
       </div>
