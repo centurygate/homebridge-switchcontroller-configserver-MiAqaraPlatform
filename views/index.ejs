@@ -24,8 +24,8 @@
       {
          setTimeout(function(){$('#popupSSIDPASSWD').trigger('create').popup('open')},500);
          console.log("参数有误!");
-         $('#SSID').text ='';
-         $('#PASSWD').text='';
+         // $('#SSID').text ='';
+         // $('#PASSWD').text='';
          return;
       }
       var ssiddata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
@@ -39,9 +39,12 @@
         {
           console.log('请求失败!');
           // alert('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},100);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
         }
-      },"json");
+      },"json").error(function(){
+        console.log('请求失败!');
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+      });
     }
     function PREDELSSID(SSID) {
       // body...
@@ -54,7 +57,7 @@
       {
         console.log('要删除的SSID不能为空');
         //alert('要删除的SSID不能为空');
-        setTimeout(function(){$('#popupSSIDEMPTY').trigger('create').popup('open')},100);
+        setTimeout(function(){$('#popupSSIDEMPTY').trigger('create').popup('open')},500);
         return;
       }
       $.post('/delsid',{ssid:gloabl_ssid},function(data,status){
@@ -67,10 +70,13 @@
         else
         {
           console.log('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},100);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
           //alert('请求失败!');
         }
-      },"json");
+      },"json").error(function(){
+        console.log('请求失败!');
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+      });
     }
   </script>
 </head>
@@ -130,7 +136,7 @@
 
       <div data-role="popup" id="popupSSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">SSID 和 Password 只能为数字或字符!</h3>
+              <h3 class="ui-title">SSID 和 Password 只能为数字或字符,请重新添加!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
           </div>
       </div>
@@ -143,7 +149,7 @@
       </div>
       <div data-role="popup" id="popupREQERROR" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">向服务器请求失败!</h3>
+              <h3 class="ui-title">向服务器请求失败,请检查网络设置!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
           </div>
       </div>
