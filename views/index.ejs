@@ -9,35 +9,50 @@
   <script type="text/javascript" src="/js/validateparameter.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
-
-      $("form").submit(function(){
-          
-          // if(!isValidIP($("#HOST").val()))
-          // {
-          //   // alert('输入的HOST 非法');
-
-          //   //返回false禁止向服务器发送请求
-          //   $('#popupCloseRight').trigger('create').popup('open');
-          //   return false;
-          // }
-          // if(!isValidPort($("#PORT").val()))
-          // {
-          //   // alert('输入的PORT 非法');
-          //   $('#popupCloseRight').trigger('create').popup('open');
-          //   //返回false禁止向服务器发送请求
-          //   return false;
-          // }
-          // if(!isValidGroup($("#GROUP").val()))
-          // {
-          //   // alert('输入的GROUP 非法');
-          //   $('#popupCloseRight').trigger('create').popup('open');
-          //   //返回false禁止向服务器发送请求
-          //   return false;
-          // }
-          
-      });
-    })
-    </script>
+  });
+    function ADDSSID()
+    {
+      var key = $('#SSID').val();
+      var value = $('#PASSWD').val();
+      var ssiddata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
+      //console.log("data is : " + ssiddata);
+      //console.log("data is : " + JSON.parse(ssiddata));
+      //console.log("stringify(data) is : "+ JSON.stringify(ssiddata,null,4));
+      if(!isValidSSIDORPassword(key) || !isValidSSIDORPassword(value))
+      {
+         alert("SSID 和 密码 只能是数字和英文字符组合");
+         return;
+      }
+      $.post('/addsid',ssiddata,function(data,status){
+        //alert("数据：" + JSON.stringify(data) + "\n状态：" + status);
+        if(data.status == 'ok')
+        {
+          window.location.reload();
+        }
+        else
+        {
+          console.log('请求失败!');
+          alert('请求失败!');
+        }
+      },"json");
+    }
+    function DELSSID(SSID) {
+      // body...
+      // alert("It will delete "+ SSID);
+       $.post('/delsid',{ssid:SSID},function(data,status){
+        //alert("数据：" + JSON.stringify(data) + "\n状态：" + status);
+        if(data.status == 'ok')
+        {
+          window.location.reload();
+        }
+        else
+        {
+          console.log('请求失败!');
+          alert('请求失败!');
+        }
+      },"json");
+    }
+  </script>
 </head>
 
 <body>
@@ -47,26 +62,46 @@
       <h1>小米网关配置</h1>
     </div>
     <div data-role="content">
-      <form method="post" action="/save">
-        <div data-role="fieldcontain">
+    
+      <table  border="1" align="center" cellspacing="10" data-role="table" class="ui-responsive">
+        <thead>
+          <tr>
+            <th>SSID</th>
+            <th>Password</th>
+            <th>Operation</th>
+          </tr>
+        </thead>
+        <tbody>
+            <% for(var i =0; i < configobj['platforms'].length;i++) 
+            {
+              if(configobj['platforms'][i].platform == 'MiAqaraPlatform')
+              {
+        %>
+        
+                <!-- <%= JSON.stringify(configobj['platforms'][i].gateways).replace(/{/ig,'').replace(/}/ig,'').replace(/"/ig,'') %> -->
+
+                <%  for(var gatewaykey in configobj['platforms'][i].gateways)
+                {
+                  %>
+                  <tr>
+                  <td height="20px" align="center"><%= gatewaykey.replace(/"/ig,'') %></td>
+                  <td height="20px"><%= configobj['platforms'][i].gateways[gatewaykey].replace(/"/ig,'') %></td>
+                  <td height="20px"><button id='<%= gatewaykey.replace(/"/ig,'') %>'  onclick='DELSSID("<%= gatewaykey.replace(/"/ig,'') %>")'> 删除 </button></td>
+                  </tr>
+                <%
+                }
+                %>
+        
+        <% 
+              }
+            } 
+        %>
           
-                  <label for="gateways">gateways</label>
-              
-                  <textarea name="gateways" id="gateways">
-                    <% for(var i =0; i < configobj['platforms'].length;i++) 
-                        {
-                          if(configobj['platforms'][i].platform == 'MiAqaraPlatform')
-                          {
-                    %>
-                            <%= JSON.stringify(configobj['platforms'][i].gateways).replace(/{/ig,'').replace(/}/ig,'').replace(/"/ig,'')%>
-                    <% 
-                          }
-                        } 
-                    %>
-                  </textarea>
-        </div>
-        <input type="submit" value="提交" >
-      </form>
+        </tbody>
+      </table>
+      <br>
+      <br>
+      <a href="#popupLogin" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a" data-transition="pop">Sign in</a>
     </div>
     <div data-role="footer">
         <div align="center"><a href="mailto:centurygate@163.com">centurygate@163.com</a></div>
@@ -76,8 +111,23 @@
       <div data-role="popup" id="popupCloseRight" data-overlay-theme="a" class="ui-content" style="max-width:280px">
               <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
           <p>&nbsp;&nbsp;存在非法参数&nbsp;&nbsp;</p>
-          </div>
+      </div>
+
+
+      
+      <div data-role="popup" id="popupLogin" data-theme="a" class="ui-corner-all">
+          <form>
+              <div style="padding:10px 20px;">
+                  <h3>请填写SSID和密码</h3>
+                  <label for="un" class="ui-hidden-accessible">Username:</label>
+                  <input type="text" name="SSID" id="SSID" value="" placeholder="SSID" data-theme="a">
+                  <label for="pw" class="ui-hidden-accessible">Password:</label>
+                  <input type="text" name="PASSWD" id="PASSWD" value="" placeholder="Password" data-theme="a">
+                  <!-- <button type="button" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-plus">确定</button> -->
+                  <a href="#"  onclick = "ADDSSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">确定</a>
+              </div>
+          </form>
+      </div>
 
 </body>
-
 </html>
