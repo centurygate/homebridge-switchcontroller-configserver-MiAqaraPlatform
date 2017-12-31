@@ -25,8 +25,11 @@ function isValidSSIDORPassword(str)
 {
     var pattern = /^[a-z0-9]+$/i;
     if(pattern.test(str)){  
-        return true;  
+        console.log("param :"+str+" is Valid");
+        return true;
+
     }else{  
+        console.log("param :"+str+"is Invalid");
         return false;  
     }   
 }
