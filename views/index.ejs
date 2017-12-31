@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <link rel="stylesheet" href="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
   <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
   <script src="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
@@ -13,8 +13,8 @@
   });
     function ADDSID()
     {
-      var key = $('#SID').val();
-      var value = $('#PASSWD').val();
+      var key = $('#SID').val().replace(/\s/g,"");;
+      var value = $('#PASSWD').val().replace(/\s/g,"");;
       //var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
       console.log("data is : " + '{\"'+key + '\":\"' + value +'\"}');
       //console.log("data is : " + JSON.parse(SIDdata));
@@ -26,7 +26,7 @@
          console.log("参数有误!");
          // $('#SID').text ='';
          // $('#PASSWD').text='';
-         return;
+         return false;
       }
       var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
       $.post('/addsid',SIDdata,function(data,status){
