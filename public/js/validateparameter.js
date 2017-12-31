@@ -21,7 +21,7 @@ function isValidGroup(str)
      }   
 }
 
-function isValidSSIDORPassword(str)
+function isValidSIDORPassword(str)
 {
     var pattern = /^[a-z0-9]+$/i;
     if(pattern.test(str)){  

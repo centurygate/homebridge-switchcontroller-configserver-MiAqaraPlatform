@@ -8,74 +8,79 @@
   <script src="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
   <script type="text/javascript" src="/js/validateparameter.js"></script>
   <script type="text/javascript">
-    var gloabl_ssid ='';
+    var gloabl_SID ='';
     $(document).ready(function(){
   });
-    function ADDSSID()
+    function ADDSID()
     {
-      var key = $('#SSID').val();
+      var key = $('#SID').val();
       var value = $('#PASSWD').val();
-      //var ssiddata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
+      //var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
       console.log("data is : " + '{\"'+key + '\":\"' + value +'\"}');
-      //console.log("data is : " + JSON.parse(ssiddata));
-      //console.log("stringify(data) is : "+ JSON.stringify(ssiddata,null,4));
+      //console.log("data is : " + JSON.parse(SIDdata));
+      //console.log("stringify(data) is : "+ JSON.stringify(SIDdata,null,4));
       //$('#popupCloseRight').trigger('create').popup('open');
-      if(!isValidSSIDORPassword(key) || !isValidSSIDORPassword(value))
+      if(!isValidSIDORPassword(key) || !isValidSIDORPassword(value))
       {
-         setTimeout(function(){$('#popupSSIDPASSWD').trigger('create').popup('open')},500);
+         setTimeout(function(){$('#popupSIDPASSWD').trigger('create').popup('open');},2000);
          console.log("参数有误!");
-         // $('#SSID').text ='';
+         // $('#SID').text ='';
          // $('#PASSWD').text='';
          return;
       }
-      var ssiddata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
-      $.post('/addsid',ssiddata,function(data,status){
+      var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
+      $.post('/addsid',SIDdata,function(data,status){
         //alert("数据：" + JSON.stringify(data) + "\n状态：" + status);
         if(data.status == 'ok')
         {
-          window.location.reload();
+          setTimeout(function(){$('#popupREQOK').trigger('create').popup('open');},800);
+          setTimeout(function(){$('#popupREQOK').popup('close');},2000);
+          setTimeout(function(){window.location.reload();},2500);
         }
         else
         {
           console.log('请求失败!');
           // alert('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},2000);
         }
       },"json").error(function(){
         console.log('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},2000);
       });
     }
-    function PREDELSSID(SSID) {
+    function PREDELSID(SID) {
       // body...
-        console.log("It will delete "+ SSID);
-        gloabl_ssid = SSID;
+        console.log("It will delete "+ SID);
+        gloabl_SID = SID;
     }
-    function POSTDELSSID()
+    function POSTDELSID()
     {
-      if (gloabl_ssid=='') 
+      if (gloabl_SID=='') 
       {
-        console.log('要删除的SSID不能为空');
-        //alert('要删除的SSID不能为空');
-        setTimeout(function(){$('#popupSSIDEMPTY').trigger('create').popup('open')},500);
+        console.log('要删除的SID不能为空');
+        //alert('要删除的SID不能为空');
+        setTimeout(function(){$('#popupSIDEMPTY').trigger('create').popup('open');},2000);
         return;
       }
-      $.post('/delsid',{ssid:gloabl_ssid},function(data,status){
+      $.post('/delsid',{SID:gloabl_SID},function(data,status){
         //alert("数据：" + JSON.stringify(data) + "\n状态：" + status);
-        gloabl_ssid='';
+        gloabl_SID='';
         if(data.status == 'ok')
         {
-          window.location.reload();
+          
+          setTimeout(function(){$('#popupREQOK').trigger('create').popup('open');},800);
+          setTimeout(function(){$('#popupREQOK').popup('close');},2000);
+          setTimeout(function(){window.location.reload();},2500);
         }
         else
         {
           console.log('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},2000);
           //alert('请求失败!');
         }
       },"json").error(function(){
         console.log('请求失败!');
-          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open')},300);
+          setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},2000);
       });
     }
   </script>
@@ -88,11 +93,11 @@
       <h1>小米网关配置</h1>
     </div>
     <div data-role="content">
-    <a href="#popupAddSSID" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a" data-transition="pop">添加网关</a>
+    <a href="#popupAddSID" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a" data-transition="pop">添加网关</a>
       <table  border="1" align="center" cellspacing="1" data-role="table" class="ui-responsive" style="margin-top:1px;margin-left:1px;margin-right:1px;margin-bottom:1px;">
         <thead>
           <tr>
-            <th>SSID</th>
+            <th>SID</th>
             <th>Password</th>
             <th>执行操作</th>
           </tr>
@@ -112,11 +117,11 @@
                   <tr>
                   <td style="vertical-align:middle"><%= gatewaykey.replace(/"/ig,'') %></td>
                   <td style="vertical-align:middle"><%= configobj['platforms'][i].gateways[gatewaykey].replace(/"/ig,'') %></td>
-                  <!-- <td height="20px"><button id='<%= gatewaykey.replace(/"/ig,'') %>'  onclick='DELSSID("<%= gatewaykey.replace(/"/ig,'') %>")'> 删除 </button></td> -->
-                  <!-- <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='DELSSID("<%= gatewaykey.replace(/"/ig,'') %>")' class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left"> -->
+                  <!-- <td height="20px"><button id='<%= gatewaykey.replace(/"/ig,'') %>'  onclick='DELSID("<%= gatewaykey.replace(/"/ig,'') %>")'> 删除 </button></td> -->
+                  <!-- <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='DELSID("<%= gatewaykey.replace(/"/ig,'') %>")' class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left"> -->
 
                      <!--  <a href="#popupDialog" data-rel="popup" data-position-to="window" data-transition="pop" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-delete ui-btn-icon-left ui-btn-b">Delete page...</a> -->
-                  <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='PREDELSSID("<%= gatewaykey.replace(/"/ig,'') %>")' data-rel="popup"  data-position-to="window" data-transition="pop" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">删除</a></td>
+                  <td style="vertical-align:middle"><a href="#popupDeleteGateWay" onclick='PREDELSID("<%= gatewaykey.replace(/"/ig,'') %>")' data-rel="popup"  data-position-to="window" data-transition="pop" class="ui-btn ui-btn-inline ui-icon-delete ui-btn-icon-left">删除</a></td>
                   </tr>
                 <%
                 }
@@ -134,16 +139,22 @@
         <div align="center"><a href="mailto:centurygate@163.com">centurygate@163.com</a></div>
       </div>
 
-      <div data-role="popup" id="popupSSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+      <div data-role="popup" id="popupREQOK" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">SSID 和 Password 只能为数字或字符,请重新添加!</h3>
+              <h3 class="ui-title ui-icon-check">执行成功!</h3>
+          </div>
+      </div>
+
+      <div data-role="popup" id="popupSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+          <div role="main" class="ui-content">
+              <h3 class="ui-title">SID 和 Password 只能为数字或字符,请重新添加!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
-      <div data-role="popup" id="popupSSIDEMPTY" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+      <div data-role="popup" id="popupSIDEMPTY" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">要删除的SSID不能为空!</h3>
+              <h3 class="ui-title">要删除的SID不能为空!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
@@ -154,16 +165,16 @@
           </div>
       </div>
       
-      <div data-role="popup" id="popupAddSSID" data-theme="a" class="ui-corner-all">
+      <div data-role="popup" id="popupAddSID" data-theme="a" class="ui-corner-all">
           <form>
               <div style="padding:10px 20px;">
-                  <h3>请填写SSID和密码</h3>
-                  <label for="SSID" class="ui-hidden-accessible">SSID:</label>
-                  <input type="text" name="SSID" id="SSID" value="" placeholder="SSID" data-theme="a" autocomplete="off">
+                  <h3>请填写SID和密码</h3>
+                  <label for="SID" class="ui-hidden-accessible">SID:</label>
+                  <input type="text" name="SID" id="SID" value="" placeholder="SID" data-theme="a" autocomplete="off">
                   <label for="PASSWD" class="ui-hidden-accessible">Password:</label>
                   <input type="text" name="PASSWD" id="PASSWD" value="" placeholder="Password" data-theme="a" autocomplete="off">
                   <!-- <button type="button" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-plus">确定</button> -->
-                  <a href="#"  onclick = "ADDSSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" data-rel="back">确定</a>
+                  <a href="#"  onclick = "ADDSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check" data-rel="back">确定</a>
                   <!-- <button type="submit" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Sign in</button> -->
               </div>
           </form>
@@ -177,8 +188,8 @@
           <div role="main" class="ui-content">
               <h3 class="ui-title">确定删除该网关?</h3>
       
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" data-rel="back">否</a>
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-btn-b" onclick='POSTDELSSID()' data-rel="back" data-transition="flow">是</a>
+              <a href="#" class="ui-btn ui-corner-all  ui-btn-inline ui-btn-b" data-rel="back">否</a>
+              <a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-btn-b" onclick='POSTDELSID()' data-rel="back" >是</a>
           </div>
       </div>
 
