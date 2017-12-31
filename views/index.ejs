@@ -11,10 +11,16 @@
     var gloabl_SID ='';
     $(document).ready(function(){
   });
+    function ShowAddSID()
+    {
+      setTimeout(function(){$('#popupAddSID').trigger('create').popup('open');},300);
+    }
     function ADDSID()
     {
       var key = $('#SID').val().replace(/\s/g,"");;
       var value = $('#PASSWD').val().replace(/\s/g,"");;
+      // var key = $('#SID').val();
+      // var value = $('#PASSWD').val();
       //var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
       console.log("data is : " + '{\"'+key + '\":\"' + value +'\"}');
       //console.log("data is : " + JSON.parse(SIDdata));
@@ -22,11 +28,11 @@
       //$('#popupCloseRight').trigger('create').popup('open');
       if(!isValidSIDORPassword(key) || !isValidSIDORPassword(value))
       {
-         setTimeout(function(){$('#popupSIDPASSWD').trigger('create').popup('open');},2000);
+         setTimeout(function(){$('#popupSIDPASSWD').trigger('create').popup('open');},600);
          console.log("参数有误!");
          // $('#SID').text ='';
          // $('#PASSWD').text='';
-         return false;
+         return false;;
       }
       var SIDdata = JSON.parse('{\"'+key + '\":\"' + value +'\"}');
       $.post('/addsid',SIDdata,function(data,status){
@@ -36,6 +42,12 @@
           setTimeout(function(){$('#popupREQOK').trigger('create').popup('open');},800);
           setTimeout(function(){$('#popupREQOK').popup('close');},2000);
           setTimeout(function(){window.location.reload();},2500);
+        }
+        else if (data.status == 'errexist') 
+        {
+           console.log('要添加的网关已存在列表中,请先删除后再添加!');
+          // alert('请求失败!');
+          setTimeout(function(){$('#popupERREXIST').trigger('create').popup('open');},800);
         }
         else
         {
@@ -71,6 +83,12 @@
           setTimeout(function(){$('#popupREQOK').trigger('create').popup('open');},800);
           setTimeout(function(){$('#popupREQOK').popup('close');},2000);
           setTimeout(function(){window.location.reload();},2500);
+        }
+        else if (data.status == 'errnotexist') 
+        {
+           console.log('要删除的网关不存在!');
+          // alert('请求失败!');
+          setTimeout(function(){$('#popupERRNOTEXIST').trigger('create').popup('open');},800);
         }
         else
         {
@@ -148,7 +166,7 @@
       <div data-role="popup" id="popupSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
               <h3 class="ui-title">SID 和 Password 只能为数字或字符,请重新添加!</h3>
-              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
+              <a href="#" onclick="ShowAddSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
@@ -164,6 +182,21 @@
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
+
+      <div data-role="popup" id="popupERREXIST" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+          <div role="main" class="ui-content">
+              <h3 class="ui-title">要添加的网关已存在列表中,请先删除后再添加!</h3>
+              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
+          </div>
+      </div>
+
+      <div data-role="popup" id="popupERRNOTEXIST" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+          <div role="main" class="ui-content">
+              <h3 class="ui-title">要删除的网关不存在!</h3>
+              <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
+          </div>
+      </div>
+      
       
       <div data-role="popup" id="popupAddSID" data-theme="a" class="ui-corner-all">
           <form>

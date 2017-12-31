@@ -38,7 +38,7 @@ router.post('/', function(req, res, next) {
         }
         if (isexist) 
         {
-            result.status = 'error';
+            result.status = 'errexist';
             res.end(JSON.stringify(result));
             break;
         }

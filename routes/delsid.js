@@ -38,7 +38,7 @@ router.post('/', function(req, res, next) {
         if (!isexist) 
         {
             console.log("ssid is not exist............");
-            result.status = 'error';
+            result.status = 'errnotexist';
             res.end(JSON.stringify(result));
             break;
         }
