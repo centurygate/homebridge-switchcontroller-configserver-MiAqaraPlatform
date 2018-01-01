@@ -12,6 +12,7 @@ router.post('/', function(req, res, next) {
     var configobj = JSON.parse(fs.readFileSync(configpath));
     var ssidpwdobj = req.body;
     var isexist = false;
+    var pos = 0;
     //ssidpwdobj 实际上只有一个key,但这里为了取得对象中的key 必须用 for .. in结构
     for(var ssid in ssidpwdobj)
     {
@@ -25,32 +26,43 @@ router.post('/', function(req, res, next) {
     {
         if(configobj['platforms'][i]['platform']=="MiAqaraPlatform")
         {
+           pos = i;
            for(var gateway_key in configobj['platforms'][i]['gateways'])
            {
+                console.log('gateway_key :' +gateway_key);
+                console.log('ssid :' +ssid);
                 //判断ssid是否已经存在,已经存在则不作修改
                 if (ssid == gateway_key) 
                 {
-                    
+                    console.log("ssid == gateway_key");
                     isexist =true;
+                    
                     break;
                 }
            }
         }
-        if (isexist) 
-        {
-            result.status = 'errexist';
-            res.end(JSON.stringify(result));
-            break;
-        }
         else
         {
-            result.status =  'ok';
-            configobj['platforms'][i]['gateways'][ssid] = ssidpwdobj[ssid];
-            console.log("configobj : " + JSON.stringify(configobj,null,4));
-            fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
-            res.end(JSON.stringify(result));
-            break;
+            continue;
         }
+        
+    }
+    if (isexist) 
+    {
+        console.log("isexist == " + isexist);
+        result.status = 'errexist';
+        res.end(JSON.stringify(result));
+    }
+    else
+    {
+        console.log('pos = ' + pos);
+        result.status =  'ok';
+        console.log("configobj['platforms'][pos]['gateways'] : " + JSON.stringify(configobj['platforms'][pos]['gateways']));
+        configobj['platforms'][pos]['gateways'][ssid] = ssidpwdobj[ssid];
+        console.log("configobj : " + JSON.stringify(configobj,null,4));
+        fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
+        res.end(JSON.stringify(result));
+        console.log("add sid ok++++++++++++++++++++++++");
     }
 });
 

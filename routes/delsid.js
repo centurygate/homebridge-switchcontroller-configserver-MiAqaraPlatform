@@ -23,11 +23,16 @@ router.post('/', function(req, res, next) {
     configobj['platforms'] = configobj['platforms']||[];
     for(var i =0; i< configobj['platforms'].length;i++)
     {
+        console.log("i ...................."+i);
+        console.log(configobj['platforms'][i]['platform']);
         if(configobj['platforms'][i]['platform']=="MiAqaraPlatform")
         {
+            console.log("MiAqaraPlatform is ....................");
            for(var gateway_key in configobj['platforms'][i]['gateways'])
            {
-                //判断ssid是否已经存在,已经存在则不作修改
+                console.log('gateway_key :' + gateway_key);
+                console.log('ssidobj[ssid] :' + ssidobj[ssid]);
+                
                 if (ssidobj[ssid] == gateway_key) 
                 {
                     isexist =true;
@@ -35,23 +40,25 @@ router.post('/', function(req, res, next) {
                 }
            }
         }
-        if (!isexist) 
+        if (isexist)
         {
-            console.log("ssid is not exist............");
-            result.status = 'errnotexist';
-            res.end(JSON.stringify(result));
             break;
         }
-        else
-        {
-            result.status =  'ok';
-            console.log("delete ssid      ............");
-            delete configobj['platforms'][i]['gateways'][ssidobj[ssid]];
-            console.log("configobj : " + JSON.stringify(configobj,null,4));
-            fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
-            res.end(JSON.stringify(result));
-            break;
-        }
+    }
+    if (!isexist) 
+    {
+        console.log("ssid is not exist............");
+        result.status = 'errnotexist';
+        res.end(JSON.stringify(result));
+    }
+    else
+    {
+        result.status =  'ok';
+        console.log("delete ssid      ............");
+        delete configobj['platforms'][i]['gateways'][ssidobj[ssid]];
+        console.log("configobj : " + JSON.stringify(configobj,null,4));
+        fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
+        res.end(JSON.stringify(result));
     }
 });
 
