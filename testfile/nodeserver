@@ -1,0 +1,19 @@
+#!/bin/sh /etc/rc.common
+# Copyright (C) 2006 OpenWrt.org
+START=98
+
+start() {
+#	node /etc/server.js
+	node /web/homebridge-switchcontroller-configserver-MiAqaraPlatform/app.js
+}
+
+stop() {
+	killall node
+}
+
+reload() {
+	killall node
+#	node /etc/server.js
+        node /web/homebridge-switchcontroller-configserver-MiAqaraPlatform/app.js
+}
+
