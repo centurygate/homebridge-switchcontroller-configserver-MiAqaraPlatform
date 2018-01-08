@@ -3,7 +3,7 @@
 var express = require('express');
 var fs = require('fs');
 var router = express.Router();
-var configpath = "D:/config.json";
+var configpath = "/root/.homebridge/config.json";
 var process = require('child_process');
 /* GET users listing. */
 router.post('/', function(req, res, next) {
