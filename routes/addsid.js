@@ -36,7 +36,6 @@ router.post('/', function(req, res, next) {
                 {
                     console.log("ssid == gateway_key");
                     isexist =true;
-                    
                     break;
                 }
            }
