@@ -13,9 +13,6 @@
     .ui-progressbar {
       position: relative;
     }
-    #progressbar .ui-progressbar-value {
-    background-color: #ccff00;
-    }
     .progress-label {
       position: absolute;
       left: 50%;
@@ -132,20 +129,17 @@
                         progressbar.progressbar({
                           value: 0,
                           change: function() {
-                            console.log(window.location.href);
                             progressLabel.text( progressbar.progressbar( "value" ) + "%" );
                           },
                           complete: function() {
                             //progressLabel.text( "完成,页面跳转中！" );
-
-                            //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+			    //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
                             var loc = window.location.href;
                             var index = loc.indexOf('#');
 
                             if (index > 0) {
                               window.location = loc.substring(0, index);
                             }
-                            
                             setTimeout(function(){window.location.reload()},600);
                           }
                         });
@@ -155,7 +149,7 @@
                      
                           progressbar.progressbar( "value", val + 1 );
                           if ( val < 99 ) {
-                            setTimeout( progress, 1500 );
+                            setTimeout( progress, 1000 );
                           }
                         }
                      
@@ -228,7 +222,7 @@
       </table>
     </div>
     <div data-role="footer">
-        <div align="center"><a href="mailto:centurygate@163.com">centurygate@163.com</a></div>
+        <div align="center"></div>
       </div>
 
       <div data-role="popup" id="popupREQOK" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
