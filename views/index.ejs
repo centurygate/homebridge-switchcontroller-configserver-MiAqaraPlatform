@@ -132,10 +132,20 @@
                         progressbar.progressbar({
                           value: 0,
                           change: function() {
+                            console.log(window.location.href);
                             progressLabel.text( progressbar.progressbar( "value" ) + "%" );
                           },
                           complete: function() {
                             //progressLabel.text( "完成,页面跳转中！" );
+
+                            //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+                            var loc = window.location.href;
+                            var index = loc.indexOf('#');
+
+                            if (index > 0) {
+                              window.location = loc.substring(0, index);
+                            }
+                            
                             setTimeout(function(){window.location.reload()},600);
                           }
                         });
