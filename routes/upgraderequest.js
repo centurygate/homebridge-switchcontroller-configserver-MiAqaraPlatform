@@ -14,7 +14,7 @@ var client= new net.Socket();
 // client.setEncoding('binary');
 //连接到服务端
 
-
+var httpport = 80;
 function upgrade(curVersion, configres) {
     var result = {};
     result.status = 'ok';
@@ -24,7 +24,7 @@ function upgrade(curVersion, configres) {
 
     const versionreq = http.request({
         hostname: host,
-        port: 3000,
+        port: httpport,
         path: '/mi/pkginfo/',
         method: 'GET',
     }, function (versionres) {
@@ -67,7 +67,7 @@ function upgrade(curVersion, configres) {
                     //3.第三步获取服务器上升级包
                     const packagereq = http.request({
                         hostname: host,
-                        port: 3000,
+                        port: httpport,
                         path: packagePathName,
                         method: 'GET',
                     }, function (packageres) {
