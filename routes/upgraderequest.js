@@ -18,8 +18,8 @@ var client= new net.Socket();
 function upgrade(curVersion, configres) {
     var result = {};
     result.status = 'ok';
-    var host = '192.168.1.152';
-    //var host = 'www.econsmart.com.cn';
+    //var host = '192.168.1.152';
+    var host = 'www.econsmart.com.cn';
     var curVersion = curVersion||'V1.0';
 
     const versionreq = http.request({
