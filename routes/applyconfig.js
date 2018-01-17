@@ -11,7 +11,7 @@ router.post('/', function(req, res, next) {
     //这边要在实际删除文件夹成功后再发送成功
     process.exec('rm -rf /root/.homebridge/persist /root/.homebridge/accessories ',function(error, stdout, stderr){
             if (error) {
-                console.error(`exec error: ${error}`);
+                // console.error(`exec error: ${error}`);
                 result.status = 'errapplyconfig';
                 res.end(JSON.stringify(result));
                 return;
@@ -21,17 +21,17 @@ router.post('/', function(req, res, next) {
                 console.log("ApplyConfig->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->");
                 result.status = 'ok';
                 res.end(JSON.stringify(result));
-                console.log(`stdout: ${stdout}`);
-                console.log(`stderr: ${stderr}`);
+                // console.log(`stdout: ${stdout}`);
+                // console.log(`stderr: ${stderr}`);
 		process.exec('reboot -f',function(error, stdout, stderr){
                 if (error) {
-                console.error(`exec error: ${error}`);
+                // console.error(`exec error: ${error}`);
                 }
                 else
                 {
 
-                console.log(`stdout: ${stdout}`);
-                console.log(`stderr: ${stderr}`);
+                // console.log(`stdout: ${stdout}`);
+                // console.log(`stderr: ${stderr}`);
                 }
                 });
             }

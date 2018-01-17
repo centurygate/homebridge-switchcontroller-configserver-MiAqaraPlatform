@@ -11,6 +11,7 @@ var save = require('./routes/save');
 var addsid = require('./routes/addsid');
 var delsid = require('./routes/delsid');
 var applyconfig = require('./routes/applyconfig');
+var upgrade = require('./routes/upgrade');
 var app = express();
 
 // view engine setup
@@ -31,6 +32,7 @@ app.use('/save',save);
 app.use('/addsid',addsid);
 app.use('/delsid',delsid);
 app.use('/applyconfig',applyconfig);
+app.use('/upgrade',upgrade);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');

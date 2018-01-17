@@ -15,7 +15,7 @@
     }
     .progress-label {
       position: absolute;
-      left: 50%;
+      left: 45%;
       top: 4px;
       font-weight: bold;
       text-shadow: 1px 1px 0 #fff;
@@ -166,6 +166,81 @@
           setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},600);
       });
     }
+    function ApplyUpgrade() {
+        showLoader();
+        $.get('/upgrade',{},function(data,status){
+            if(data.status == 'ok')
+            {
+                hideLoader();
+                //此处弹出进度条
+                setTimeout(function(){$('#popupProgress').trigger('create').popup('open');},800);
+                setTimeout(function() {
+                    var progressbar = $( "#progressbar" ),
+                        progressLabel = $( ".progress-label" );
+
+                    progressbar.progressbar({
+                        value: 0,
+                        change: function() {
+                            progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                        },
+                        complete: function() {
+                            //progressLabel.text( "完成,页面跳转中！" );
+                            //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+                            var loc = window.location.href;
+                            var index = loc.indexOf('#');
+
+                            if (index > 0) {
+                                window.location = loc.substring(0, index);
+                            }
+                            setTimeout(function(){window.location.reload()},600);
+                        }
+                    });
+
+                    function progress() {
+                        var val = progressbar.progressbar( "value" ) || 0;
+
+                        progressbar.progressbar( "value", val + 1 );
+                        if ( val < 99 ) {
+                            setTimeout( progress, 2500 );
+                        }
+                    }
+
+                    setTimeout( progress, 10 );
+                },800);
+            }
+            else
+            {
+                console.log('请求失败!');
+                console.log('fail reason :' + data.reason);
+                hideLoader();
+                //设置失败原因
+                $("#upgradeErrorInfo").html(data.reason);
+                setTimeout(function(){$('#popupUpgradeERROR').trigger('create').popup('open');},600);
+            }
+        },"json").error(function(){
+            console.log('请求失败!');
+            hideLoader();
+            setTimeout(function(){$('#popupREQERROR').trigger('create').popup('open');},600);
+        });
+    }
+    //显示加载器
+    function showLoader() {
+        //显示加载器.for jQuery Mobile 1.2.0
+        $.mobile.loading('show', {
+            text: '正在加载升级包...', //加载器中显示的文字
+            textVisible: true, //是否显示文字
+            theme: 'b',        //加载器主题样式a-e
+            textonly: false,   //是否只显示文字
+            html: ""           //要显示的html内容，如图片等
+        });
+    }
+
+    //隐藏加载器.for jQuery Mobile 1.2.0
+    function hideLoader()
+    {
+        //隐藏加载器
+        $.mobile.loading('hide');
+    }
   </script>
 </head>
 
@@ -177,8 +252,8 @@
     </div>
     <div data-role="content">
     <a href="#popupAddSID" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">添加网关</a>
-
     <a href="#popupApplyConfig" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">配置生效</a>
+    <a href="#popupUpgradeConfig" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-arrow-u ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">升级系统</a>
 
       <table  border="1" align="center" cellspacing="1" data-role="table" class="ui-responsive" style="margin-top:1px;margin-left:1px;margin-right:1px;margin-bottom:1px;">
         <thead>
@@ -227,40 +302,47 @@
 
       <div data-role="popup" id="popupREQOK" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title ui-icon-check">执行成功!</h3>
+              <h3 align="center" class="ui-title ui-icon-check">执行成功!</h3>
           </div>
       </div>
 
       <div data-role="popup" id="popupSIDPASSWD" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">SID 和 Password 只能为数字或字符,请重新添加!</h3>
+              <h3 align="center" class="ui-title">SID 和 Password 只能为数字或字符,请重新添加!</h3>
               <a href="#" onclick="ShowAddSID()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
       <div data-role="popup" id="popupSIDEMPTY" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">要删除的SID不能为空!</h3>
+              <h3 align="center" class="ui-title">要删除的SID不能为空!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
       <div data-role="popup" id="popupREQERROR" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">向服务器请求失败,请检查网络设置!</h3>
+              <h3 align="center" class="ui-title">向服务器请求失败,请检查网络设置!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
+      <div data-role="popup" id="popupUpgradeERROR" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
+              <div role="main" class="ui-content">
+                      <h3 align="center" id="upgradeErrorInfo" class="ui-title">向服务器请求失败,请检查网络设置!</h3>
+                      <a align="center" href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
+                  </div>
+      </div>
+
       <div data-role="popup" id="popupERREXIST" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">要添加的网关已存在列表中,请先删除后再添加!</h3>
+              <h3 align="center" class="ui-title">要添加的网关已存在列表中,请先删除后再添加!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
 
       <div data-role="popup" id="popupERRNOTEXIST" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">要删除的网关不存在!</h3>
+              <h3 align="center" class="ui-title">要删除的网关不存在!</h3>
               <a href="#" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-alert" data-rel="back">确定</a>
           </div>
       </div>
@@ -269,7 +351,7 @@
       <div data-role="popup" id="popupAddSID" data-theme="a" class="ui-corner-all">
           <form>
               <div style="padding:10px 20px;">
-                  <h3>请填写SID和密码</h3>
+                  <h3 align="center">请填写SID和密码</h3>
                   <label for="SID" class="ui-hidden-accessible">SID:</label>
                   <input type="text" name="SID" id="SID" value="" placeholder="SID" data-theme="a" autocomplete="off">
                   <label for="PASSWD" class="ui-hidden-accessible">Password:</label>
@@ -284,16 +366,24 @@
       <div data-role="popup" id="popupApplyConfig" data-theme="a" class="ui-corner-all">
           <form>
               <div style="padding:10px 20px;">
-                  <h3>将重启网关,确定操作?</h3>
+                  <h3 align="center">将重启网关,确定操作?</h3>
                   <a href="#"  onclick = "ApplyConfig()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-inline ui-btn-icon-left ui-icon-check" data-rel="back">确定</a>
                   <a href="#"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-btn-inline ui-icon-delete" data-rel="back">取消</a>
               </div>
           </form>
       </div>
-
+      <div data-role="popup" id="popupUpgradeConfig" data-theme="a" class="ui-corner-all">
+        <form>
+          <div style="padding:10px 20px;">
+            <h3 align="center">系统升级需联网,确定操作?</h3>
+            <a href="#"  onclick = "ApplyUpgrade()" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-inline ui-btn-icon-left ui-icon-check" data-rel="back">确定</a>
+            <a href="#"  class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-btn-inline ui-icon-delete" data-rel="back">取消</a>
+          </div>
+        </form>
+      </div>
       <div data-role="popup" id="popupProgress" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="min-width:300px;max-width:400px;">
           <div role="main" class="ui-content">
-              <h3 class="ui-title">请耐心等候,切勿断电!</h3>
+              <h3 align="center" class="ui-title">请耐心等候,切勿断电!</h3>
               <div id="progressbar"><div class="progress-label"></div></div>
           </div>
       </div>
@@ -304,7 +394,7 @@
           <h3>提示</h3>
           </div> -->
           <div role="main" class="ui-content">
-              <h3 class="ui-title">确定删除该网关?</h3>
+              <h3 align="center" class="ui-title">确定删除该网关?</h3>
       
               <a href="#" class="ui-btn ui-corner-all  ui-btn-inline ui-btn-b" data-rel="back">否</a>
               <a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-btn-b" onclick='POSTDELSID()' data-rel="back" >是</a>
@@ -315,6 +405,6 @@
               <a href="#" data-rel="back" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
           <p>&nbsp;&nbsp;存在非法参数&nbsp;&nbsp;</p>
       </div> -->
-
+  </div>
 </body>
 </html>
