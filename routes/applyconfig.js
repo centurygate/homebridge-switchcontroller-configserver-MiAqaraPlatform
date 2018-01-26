@@ -2,13 +2,33 @@
 
 var express = require('express');
 var fs = require('fs');
+var os = require("os");
 var router = express.Router();
 var process = require('child_process');
+var configpath = "/root/.homebridge/config.json"
 /* GET users listing. */
 router.post('/', function(req, res, next) {
     var result = {};
     result.status = 'ok';
     //这边要在实际删除文件夹成功后再发送成功
+    var networkinfo = os.networkInterfaces();
+    if(typeof (networkinfo['eth0.1'] != 'undefined'))
+    {
+        for(var i = 0; i < networkinfo['eth0.1'].length;i++)
+        {
+            if(typeof(networkinfo['eth0.1'][i]['mac']) != 'undefined')
+            {
+                var username = networkinfo['eth0.1'][i]['mac'].toUpperCase()
+                var configobj = JSON.parse(fs.readFileSync(configpath));
+                configobj['bridge']['username'] = username;
+                configobj['bridge']['name'] = configobj['bridge']['name']+username;
+                fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
+                console.log(JSON.stringify(configobj,null,4));
+                break;
+            }
+        }
+    }
+
     process.exec('rm -rf /root/.homebridge/persist /root/.homebridge/accessories ',function(error, stdout, stderr){
             if (error) {
                 // console.error(`exec error: ${error}`);
@@ -23,7 +43,7 @@ router.post('/', function(req, res, next) {
                 res.end(JSON.stringify(result));
                 // console.log(`stdout: ${stdout}`);
                 // console.log(`stderr: ${stderr}`);
-		process.exec('reboot -f',function(error, stdout, stderr){
+		        process.exec('reboot -f',function(error, stdout, stderr){
                 if (error) {
                 // console.error(`exec error: ${error}`);
                 }
