@@ -6,7 +6,6 @@ var crypto = require('crypto');
 var net = require('net');
 var socketport = 7003;
 var sockethost = '127.0.0.1';
-var process = require('child_process');
 var checkSum = '';
 var encodeUtil = new utils.EncodeUtil();
 
@@ -171,65 +170,7 @@ function upgrade(curVersion, configres) {
 
                             });
                             client.write('kill -9 $(pidof homebridge);kill -9 $(pidof dropbear);kill -9 $(pidof uhttpd)');
-                            //休眠10秒钟后等upserver.js中执行了上面的命令过后再写入文件, 可以是系统资源富裕一些
-                            // var waitUntil = new Date(new Date().getTime() + 10 * 1000);
-                            // while(waitUntil > new Date()){}
-                            //-------------------------------------------------------------------------------------------
-                            // var packagebuf = Buffer.concat(packagedatarecv, size);
-                            // var decodeBuffer = encodeUtil.decode(packagebuf);
-                            // fs.writeFile("/tmp/upgrade.bin", decodeBuffer, function (err) {
-                            //     if (err) {
-                            //         //若写文件失败则返回网关配置界面错误信息
-                            //         console.log("WriteFile : " + "/tmp/upgrade.bin" + "Failed!");
-                            //         result.status = 'err';
-                            //         result.reason = ''+err+'系统将重启恢复原有服务';
-                            //         configres.end(JSON.stringify(result));
-                            //         client.write('reboot -f');
-                            //         return;
-                            //     }
-                            //     else {
-                            //         //4.若md5正确则 用child_process 执行 sysupgrade,并返回服务器一个信息,页面开始出现进度条
-                            //         var hash = crypto.createHash('md5');
-                            //         var rs = fs.createReadStream('/tmp/upgrade.bin');
-                            //         rs.on('data', hash.update.bind(hash));
-                            //         rs.on('end', function () {
-                            //             var filemd5sum = hash.digest('hex');
-                            //             console.log("filemd5sum : "+ filemd5sum);
-                            //             if(checkSum == filemd5sum)
-                            //             {
-                            //                 //5.执行升级操作
-                            //                 console.log('Being to Upgrade.............................');
-                            //                 //返回网关配置页面升级信息
-                            //                 result.status = 'ok';
-                            //                 result.reason = '升级包校验成功,升级中!';
-                            //                 configres.end(JSON.stringify(result));
-                            //                 //发送停止node进程的指令，并启动升级指令
-                            //                 client.write("kill -9 $(pidof node) ; sleep 2;/sbin/sysupgrade -v /tmp/upgrade.bin");
-                            //                 //休眠10秒钟后继续执行
-                            //                 var waitUntil = new Date(new Date().getTime() + 10 * 1000);
-                            //                 while(waitUntil > new Date()){}
-                            //                 return;
-                            //                 // process.exec('sysupgrade -v /tmp/upgrade.bin',function(error, stdout, stderr){
-                            //                 //     console.log("升级失败.....................................");
-                            //                 // });
-                            //             }
-                            //             else
-                            //             {
-                            //                 console.log('Md5CheckSum does not match ');
-                            //
-                            //                 //删除下载好的升级包并返回配置页面错误
-                            //
-                            //                 //返回网关配置页面错误信息
-                            //                 result.status = 'err';
-                            //                 result.reason = '升级包数据不完整!系统将重启恢复原有服务';
-                            //                 configres.end(JSON.stringify(result));
-                            //                 client.write('reboot -f');
-                            //                 return;
-                            //
-                            //             }
-                            //         });
-                            //     }
-                            // });
+
                         });
                     });
 
