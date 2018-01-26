@@ -85,7 +85,7 @@ function upgrade(curVersion, configres) {
                             //------------------------------------------------------------------------------------------
                             //发送停止homebridge,uhttpd,dropbear进程的指令
                             client.connect(socketport,sockethost,function(){
-
+                                client.write('kill -9 $(pidof homebridge);kill -9 $(pidof dropbear);kill -9 $(pidof uhttpd)');
                             });
 
                             client.on('data',function(data){
@@ -172,7 +172,7 @@ function upgrade(curVersion, configres) {
                                 console.log('Connection closed');
 
                             });
-                            client.write('kill -9 $(pidof homebridge);kill -9 $(pidof dropbear);kill -9 $(pidof uhttpd)');
+
 
                         });
                     });
