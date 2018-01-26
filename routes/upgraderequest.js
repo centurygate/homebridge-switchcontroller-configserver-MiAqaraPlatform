@@ -122,17 +122,19 @@ function upgrade(curVersion, configres) {
                                                 if(checkSum == filemd5sum)
                                                 {
                                                     //5.执行升级操作
-                                                    console.log('Being to Upgrade.............................');
+                                                    console.log('升级包校验成功,升级中!');
                                                     //返回网关配置页面升级信息
                                                     result.status = 'ok';
                                                     result.reason = '升级包校验成功,升级中!';
-                                                    configres.end(JSON.stringify(result));
+                                                    configres.json(result);
+                                                    configres.end();
                                                     //发送停止node进程的指令，并启动升级指令
+                                                    console.log("Send killall node;/sbin/sysupgrade -v /tmp/upgrade.bin to upserver.js");
                                                     client.write("killall node;/sbin/sysupgrade -v /tmp/upgrade.bin");
                                                     //休眠10秒钟后继续执行
                                                     // var waitUntil = new Date(new Date().getTime() + 10 * 1000);
                                                     // while(waitUntil > new Date()){}
-                                                    return;
+                                                    //return;
                                                     // process.exec('sysupgrade -v /tmp/upgrade.bin',function(error, stdout, stderr){
                                                     //     console.log("升级失败.....................................");
                                                     // });
