@@ -187,9 +187,9 @@
                         },
                         complete: function() {
                             //progressLabel.text( "完成,页面跳转中！" );
-                            //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+                            //为了防止刷新页面时 url中带有/upgrade 地址造成重复下载,因此特意删除/upgrade后再赋值给window.location
                             var loc = window.location.href;
-                            var index = loc.indexOf('#');
+                            var index = loc.indexOf('/upgrade');
 
                             if (index > 0) {
                                 window.location = loc.substring(0, index);
