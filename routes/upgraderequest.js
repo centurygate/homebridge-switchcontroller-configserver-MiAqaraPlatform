@@ -94,6 +94,9 @@ function upgrade(curVersion, configres) {
                                 console.log("___________________________________________");
                                 if(data == 'terminate')
                                 {
+                                    //等待十秒钟,非科学的方法。主要是为了让网络数据回给浏览器
+                                    var waitUntil = new Date(new Date().getTime() + 10 * 1000);
+                                    while(waitUntil > new Date()){}
                                     process.exit(0);
                                 }
                                 if(data == 'continue')
