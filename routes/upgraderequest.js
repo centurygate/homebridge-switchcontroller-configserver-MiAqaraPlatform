@@ -93,6 +93,10 @@ function upgrade(curVersion, configres) {
                                 console.log("___________________________________________");
                                 console.log('Recv data:'+ data);
                                 console.log("___________________________________________");
+                                if(data == 'terminate')
+                                {
+                                    process.exit(0);
+                                }
                                 if(data == 'continue')
                                 {
                                     var packagebuf = Buffer.concat(packagedatarecv, size);
@@ -144,8 +148,7 @@ function upgrade(curVersion, configres) {
                                                     result.reason = '升级包数据不完整!系统将重启恢复原有服务';
                                                     configres.end(JSON.stringify(result));
                                                     client.write('reboot -f');
-                                                    return;
-
+                                                    //return;
                                                 }
                                             });
                                         }
