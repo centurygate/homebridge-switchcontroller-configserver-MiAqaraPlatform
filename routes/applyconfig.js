@@ -10,9 +10,10 @@ var configpath = "/root/.homebridge/config.json"
 router.post('/', function(req, res, next) {
     var result = {};
     result.status = 'ok';
+    try {
     //这边要在实际删除文件夹成功后再发送成功
     var networkinfo = os.networkInterfaces();
-    if(typeof (networkinfo['eth0.1'] != 'undefined'))
+    if(typeof (networkinfo['eth0.1']) != 'undefined')
     {
         for(var i = 0; i < networkinfo['eth0.1'].length;i++)
         {
@@ -57,9 +58,13 @@ router.post('/', function(req, res, next) {
             }
             
       });
-    // console.log("ApplyConfig->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->->");
-    // result.status = 'ok';
-    // res.end(JSON.stringify(result));
+    }
+    catch (err) {
+        console.log("Error: " + err);
+        result.status = 'errapplyconfig';
+        res.end(JSON.stringify(result));
+        return;
+    }
 });
 
 //添加这个代码是为了解决 向 /save  url post 过后经过 save.js 的router.post('/',function(req,res,next){... res.redirect('/'); })处理过后 浏览器地址栏并没有显示为

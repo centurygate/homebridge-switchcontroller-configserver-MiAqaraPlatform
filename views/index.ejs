@@ -4,28 +4,42 @@
 <head>
   <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   <link rel="stylesheet" href="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/jQMProgressBar.css" />
   <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
   <script src="/js/jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <script type="text/javascript" src="/js/jQMProgressBar.js"></script>
   <script type="text/javascript" src="/js/validateparameter.js"></script>
-  <script src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="/js/jquery-ui-1.12.1.custom/jquery-ui.min.css">
-    <style>
-    .ui-progressbar {
-      position: relative;
-    }
-    .progress-label {
-      position: absolute;
-      left: 45%;
-      top: 4px;
-      font-weight: bold;
-      text-shadow: 1px 1px 0 #fff;
-    }
-  </style>
+  <!--<script src="/js/jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>-->
+  <!--<link rel="stylesheet" href="/js/jquery-ui-1.12.1.custom/jquery-ui.min.css">-->
+    <!--<style>-->
+    <!--.ui-progressbar {-->
+      <!--position: relative;-->
+    <!--}-->
+    <!--.progress-label {-->
+      <!--position: absolute;-->
+      <!--left: 45%;-->
+      <!--top: 4px;-->
+      <!--font-weight: bold;-->
+      <!--text-shadow: 1px 1px 0 #fff;-->
+    <!--}-->
+  <!--</style>-->
   <script type="text/javascript">
     var gloabl_SID ='';
     $(document).ready(function(){
         //设置超时9个小时
         $.ajaxSetup({timeout:32400000});
+        $(document)
+            .on('complete', '#progressbar', function () {
+                // your code
+                //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+                var loc = window.location.href;
+                var index = loc.indexOf('#');
+
+                if (index > 0) {
+                    window.location = loc.substring(0, index);
+                }
+                setTimeout(function(){window.location.reload()},600);
+            });
   });
     function ShowAddSID()
     {
@@ -125,36 +139,46 @@
           //此处弹出进度条
           setTimeout(function(){$('#popupProgress').trigger('create').popup('open');},800);
           setTimeout(function() {
-                        var progressbar = $( "#progressbar" ),
-                          progressLabel = $( ".progress-label" );
-                     
-                        progressbar.progressbar({
-                          value: 0,
-                          change: function() {
-                            progressLabel.text( progressbar.progressbar( "value" ) + "%" );
-                          },
-                          complete: function() {
-                            //progressLabel.text( "完成,页面跳转中！" );
-			    //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
-                            var loc = window.location.href;
-                            var index = loc.indexOf('#');
-
-                            if (index > 0) {
-                              window.location = loc.substring(0, index);
-                            }
-                            setTimeout(function(){window.location.reload()},600);
-                          }
-                        });
-                        function progress() {
-                            var val = progressbar.progressbar( "value" ) || 0;
-
-                            progressbar.progressbar( "value", val + 1 );
-                            if ( val < 99 ) {
-                                setTimeout( progress, 1000 );
-                            }
-                        }
-                     
-                        setTimeout( progress, 10 );
+                 //        var progressbar = $( "#progressbar" ),
+                 //          progressLabel = $( ".progress-label" );
+                 //
+                 //        progressbar.progressbar({
+                 //          value: 0,
+                 //          change: function() {
+                 //            progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                 //          },
+                 //          complete: function() {
+                 //            //progressLabel.text( "完成,页面跳转中！" );
+			    // //为了去掉刷新页面时 url地址中的hash片段因此特意删除hash片段后再赋值给window.location
+                 //            var loc = window.location.href;
+                 //            var index = loc.indexOf('#');
+                //
+                 //            if (index > 0) {
+                 //              window.location = loc.substring(0, index);
+                 //            }
+                 //            setTimeout(function(){window.location.reload()},600);
+                 //          }
+                 //        });
+                 //        function progress() {
+                 //            var val = progressbar.progressbar( "value" ) || 0;
+                //
+                 //            progressbar.progressbar( "value", val + 1 );
+                 //            if ( val < 99 ) {
+                 //                setTimeout( progress, 1000 );
+                 //            }
+                 //        }
+                 //
+                 //        setTimeout( progress, 10 );
+                  jQMProgressBar('progressbar')
+                  .setOuterTheme('b')
+                  .setInnerTheme('e')
+                  .isMini(true)
+                  .setMax(100)
+                  .setStartFrom(0)
+                  .setInterval(1500)
+                  .showCounter(true)
+                  .build()
+                  .run();
                       },800);
         }
         else
@@ -176,37 +200,47 @@
                 //此处弹出进度条
                 setTimeout(function(){$('#popupProgress').trigger('create').popup('open');},800);
                 setTimeout(function() {
-                    var progressbar = $( "#progressbar" ),
-                        progressLabel = $( ".progress-label" );
-
-                    progressbar.progressbar({
-                        value: 0,
-                        change: function() {
-                            progressLabel.text( progressbar.progressbar( "value" ) + "%" );
-                        },
-                        complete: function() {
-                            //progressLabel.text( "完成,页面跳转中！" );
-                            //为了防止刷新页面时 url中带有/upgrade 地址造成重复下载,因此特意删除/upgrade后再赋值给window.location
-                            var loc = window.location.href;
-                            var index = loc.indexOf('/upgrade');
-
-                            if (index > 0) {
-                                window.location = loc.substring(0, index);
-                            }
-                            setTimeout(function(){window.location.reload()},600);
-                        }
-                    });
-
-                    function progress() {
-                        var val = progressbar.progressbar( "value" ) || 0;
-
-                        progressbar.progressbar( "value", val + 1 );
-                        if ( val < 99 ) {
-                            setTimeout( progress, 2850 );
-                        }
-                    }
-
-                    setTimeout( progress, 10 );
+                    // var progressbar = $( "#progressbar" ),
+                    //     progressLabel = $( ".progress-label" );
+                    //
+                    // progressbar.progressbar({
+                    //     value: 0,
+                    //     change: function() {
+                    //         progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+                    //     },
+                    //     complete: function() {
+                    //         //progressLabel.text( "完成,页面跳转中！" );
+                    //         //为了防止刷新页面时 url中带有/upgrade 地址造成重复下载,因此特意删除/upgrade后再赋值给window.location
+                    //         var loc = window.location.href;
+                    //         var index = loc.indexOf('/upgrade');
+                    //
+                    //         if (index > 0) {
+                    //             window.location = loc.substring(0, index);
+                    //         }
+                    //         setTimeout(function(){window.location.reload()},600);
+                    //     }
+                    // });
+                    //
+                    // function progress() {
+                    //     var val = progressbar.progressbar( "value" ) || 0;
+                    //
+                    //     progressbar.progressbar( "value", val + 1 );
+                    //     if ( val < 99 ) {
+                    //         setTimeout( progress, 2850 );
+                    //     }
+                    // }
+                    //
+                    // setTimeout( progress, 10 );
+                    jQMProgressBar('progressbar')
+                        .setOuterTheme('b')
+                        .setInnerTheme('e')
+                        .isMini(true)
+                        .setMax(100)
+                        .setStartFrom(0)
+                        .setInterval(1500)
+                        .showCounter(true)
+                        .build()
+                        .run();
                 },800);
             }
             else
@@ -254,7 +288,7 @@
     <div data-role="content">
     <a href="#popupAddSID" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-plus ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">添加网关</a>
     <a href="#popupApplyConfig" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-check ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">配置生效</a>
-    <a href="#popupUpgradeConfig" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-arrow-u ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">升级系统</a>
+    <!--<a href="#popupUpgradeConfig" data-rel="popup" data-position-to="window" class="ui-btn ui-corner-all ui-shadow ui-btn-inline ui-icon-arrow-u ui-btn-icon-left ui-btn-a ui-btn-inline" data-transition="pop">升级系统</a>-->
 
       <table  border="1" align="center" cellspacing="1" data-role="table" class="ui-responsive" style="margin-top:1px;margin-left:1px;margin-right:1px;margin-bottom:1px;">
         <thead>
@@ -385,7 +419,7 @@
       <div data-role="popup" id="popupProgress" data-overlay-theme="b" data-theme="b" data-dismissible="false" style="min-width:300px;max-width:400px;">
           <div role="main" class="ui-content">
               <h3 align="center" class="ui-title">请耐心等候,切勿断电!</h3>
-              <div id="progressbar"><div class="progress-label"></div></div>
+              <div id="progressbar"></div></div>
           </div>
       </div>
 
