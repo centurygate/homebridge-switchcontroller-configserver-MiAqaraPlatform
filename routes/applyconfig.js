@@ -22,7 +22,7 @@ router.post('/', function(req, res, next) {
                 var username = networkinfo['eth0.1'][i]['mac'].toUpperCase()
                 var configobj = JSON.parse(fs.readFileSync(configpath));
                 configobj['bridge']['username'] = username;
-                configobj['bridge']['name'] = configobj['bridge']['name']+username;
+                configobj['bridge']['name'] = 'LinkMe'+username;
                 fs.writeFileSync(configpath,JSON.stringify(configobj,null,4));
                 console.log(JSON.stringify(configobj,null,4));
                 break;
